@@ -6,7 +6,7 @@ Useful features:
 - Power management 
 > Example:
 > ```cs
-> PowerManagement.Set(PowerAction.Shu down);
+> PowerManagement.Set(PowerAction.Shutdown);
 > ```
 - Math
 > Math class
