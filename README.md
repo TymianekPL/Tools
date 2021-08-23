@@ -12,12 +12,14 @@ Useful features:
 > Math class
 > - Clamp
 > > Clamp value to min and max
+> > 
 > > Example:
 > > ```cs
 > > int value = Math.Clamp(value: 120, max: 100, min: 0); // it will return 100
 > > ```
 > - Sin
 > > Generate sinusoid wave
+> > 
 > > Example:
 > > ```cs
 > > short[] sin = Math.Sin(rate: 500, bufferSize: 2000); // That will generate array with sinusoid values 
@@ -28,6 +30,7 @@ Useful features:
 > - Start
 > > Arguments: Action action 
 > > start action after timeout without blocking thread 
+>
 > Usage:
 > ```cs
 > Timeout t = new Timeout(new TimeoutTime
@@ -37,8 +40,14 @@ Useful features:
 > t.Start(() => {
 >     Console.WriteLine("That will be shown after 20 seconds after calling \"Start\" method!");
 > } 
-> Console.WriteLine("That wi execure withour timeout!");
+> Console.WriteLine("That will execure withour timeout!");
 > ```
-
+- MessageBox
+> Show message box to user 
+> 
+> Example:
+> ```cs
+> MessageBox.Show("Hello, world", "My box", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+> ```
 
 
