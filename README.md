@@ -26,9 +26,11 @@ Useful features:
 > > ```
 - Timeout
 > class to set timeout for action 
+> 
 > Constructor arguments: TimeoutTime time
 > - Start
 > > Arguments: Action action 
+> > 
 > > start action after timeout without blocking thread 
 >
 > Usage:
