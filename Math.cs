@@ -7,6 +7,124 @@ using System.Threading.Tasks;
 namespace Tools
 {
     /// <summary>
+    /// Vector 3D
+    /// </summary>
+    public struct Vector3
+    {
+        /// <summary>
+        /// Empty Vector 3D
+        /// </summary>
+        public static Vector3 Zero { get; set; } = new Vector3(0, 0, 0);
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
+
+        /// <summary>
+        /// Initialize Vector 3D
+        /// </summary>
+        /// <param name="X">X</param>
+        /// <param name="Y">Y</param>
+        /// <param name="Z">Z</param>
+        public Vector3(int X, int Y, int Z)
+        {
+            this.X = X;
+            this.Y = Y;
+            this.Z = Z;
+        }
+    }
+
+    /// <summary>
+    /// Vector 4D
+    /// </summary>
+    public struct Vector4
+    {
+        /// <summary>
+        /// Empty Vector 4D
+        /// </summary>
+        public static Vector4 Zero { get; set; } = new Vector4(0, 0, 0, 0);
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
+        public int W { get; set; }
+
+        /// <summary>
+        /// Initialize Vector 4D
+        /// </summary>
+        /// <param name="X">X</param>
+        /// <param name="Y">Y</param>
+        /// <param name="Z">Z</param>
+        /// <param name="Z">W</param>
+        public Vector4(int X, int Y, int Z, int W)
+        {
+            this.X = X;
+            this.Y = Y;
+            this.Z = Z;
+            this.W = W;
+        }
+    }
+    
+    /// <summary>
+    /// Vector 3D (float)
+    /// </summary>
+    public struct Vector3F
+    {
+        /// <summary>
+        /// Empty Vector 3D
+        /// </summary>
+        public static Vector3F Zero { get; set; } = new Vector3F(0.0F, 0.0F, 0.0F);
+
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+
+        /// <summary>
+        /// Initialize Vector 3D
+        /// </summary>
+        /// <param name="X">X</param>
+        /// <param name="Y">Y</param>
+        /// <param name="Z">Z</param>
+        public Vector3F(float X, float Y, float Z)
+        {
+            this.X = X;
+            this.Y = Y;
+            this.Z = Z;
+        }
+    }
+
+    /// <summary>
+    /// Vector 4D
+    /// </summary>
+    public struct Vector4f
+    {
+        /// <summary>
+        /// Empty Vector 4D
+        /// </summary>
+        public static Vector4f Zero { get; set; } = new Vector4f(0.0F, 0.0F, 0.0F, 0.0F);
+
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+        public float W { get; set; }
+
+        /// <summary>
+        /// Initialize Vector 4D
+        /// </summary>
+        /// <param name="X">X</param>
+        /// <param name="Y">Y</param>
+        /// <param name="Z">Z</param>
+        /// <param name="Z">W</param>
+        public Vector4f(float X, float Y, float Z, float W)
+        {
+            this.X = X;
+            this.Y = Y;
+            this.Z = Z;
+            this.W = W;
+        }
+    }
+
+    /// <summary>
     /// The math class, every math here!
     /// </summary>
     public class Math
@@ -79,6 +197,13 @@ namespace Tools
                 return value;
         }
 
+        /// <summary>
+        /// Sinusoid
+        /// </summary>
+        /// <param name="frequency">Frequency</param>
+        /// <param name="rate">Rate</param>
+        /// <param name="bufferSize">Size of the buffer</param>
+        /// <returns>Sinusoid wave</returns>
         public static short[] Sin(int frequency = 1000, int rate = 8000, int bufferSize = 100)
         {
             short[] buffer = new short[bufferSize];

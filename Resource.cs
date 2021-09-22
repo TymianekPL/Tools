@@ -3,72 +3,90 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
+using System.Security.Principal;
 
 namespace Tools
 {
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
     [System.Runtime.InteropServices.ComVisible(false)]
-    public class Resource<TKey, TName, TValue>
+    class Resource<Tkey, TValue>
     {
-        public struct Entry
+        public struct Res<Key, Value>
         {
-            public TKey Key;
-            public TName Name; 
-            public TValue Value; 
+            public Key key;
+            public Value value;
         }
 
-        public Entry[] items = new Entry[0];
-        
+        internal Res<Tkey, TValue>[] list = { };
 
-        public void Add(TKey key, TName name, TValue value)
+        public TValue this[Tkey key]
         {
-            if(Find(key) != null)
-                throw new ArgumentException("Item already in array!", nameof(key));
-            Array.Resize(ref items, items.Length + 1);
-            items[items.Length - 1] = new Entry
+            get
             {
-                Key = key,
-                Name = name,
-                Value = value
+                foreach (Res<Tkey, TValue> res in list)
+                {
+                    if (res.key.Equals(key))
+                        return res.value;
+                }
+                return default;
+            }
+            set
+            {
+                Add(key, value);
+            }
+        }
+
+        public bool Contains(Tkey key)
+        {
+            foreach (Res<Tkey, TValue> item in list)
+            {
+                if(item.key.Equals(key))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void Remove(Tkey key)
+        {
+            foreach (Res<Tkey, TValue> res in list)
+            {
+                if (res.key.Equals(key))
+                {
+                    int toRemove = 0;
+                    foreach (Res<Tkey, TValue> item in list)
+                    {
+                        if(item.key.Equals(key))
+                        {
+                            break;
+                        }
+                        toRemove++;
+                    }
+                    list = list.Where((source, index) =>index != toRemove).ToArray();
+                    return;
+                }
+            }
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        public void Add(Tkey key, TValue value)
+        {
+            foreach (Res<Tkey, TValue> res in list)
+            {
+                if (res.key.Equals(key))
+                    throw new ArgumentException("Key already in list!", nameof(key));
+            }
+            Array.Resize(ref list, list.Length + 1);
+            Res<Tkey, TValue> r = new Res<Tkey, TValue>
+            {
+                key = key,
+                value = value
             };
-        }
-
-
-        public void Remove(TKey item)
-        {
-            items[Array.IndexOf(items, item)] = items[items.Length - 1];
-            Array.Resize(ref items, items.Length -1);
-        }
-
-        public TValue Find(TKey key)
-        {
-            foreach (var item in items)
-            {
-                if(item.Key.Equals(key))
-                    return item.Value;
-            }
-
-            return default;
-        }
-
-
-        public TName FindName(TKey key)
-        {
-            foreach (var item in items)
-            {
-                if(item.Key.Equals(key))
-                    return item.Name;
-            }
-
-            return default;
-        }
-
-        public Entry[] GetItems()
-        {
-            return items;
+            list[list.Length] = r;
         }
     }
 }

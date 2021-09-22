@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>07DA1A407E5DC466F9A3DD44F8FF9580F748D5F7</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Tymianek.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,11 +59,23 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="cert.pfx" />
+    <None Include="crt.cer" />
+    <None Include="Tymianek.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Tools.Diagnostic\Tools.Diagnostic.csproj">
+      <Project>{26787ad5-c15c-451a-9df8-97ebd322bf7f}</Project>
+      <Name>Tools.Diagnostic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tools.Window\Tools.Window.csproj">
+      <Project>{f5851283-ca82-46ad-91a7-563c2fbc6d5e}</Project>
+      <Name>Tools.Window</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tools.csproj">
       <Project>{6871b5f4-6a32-407d-8f5a-51b38bf74d13}</Project>
       <Name>Tools</Name>
