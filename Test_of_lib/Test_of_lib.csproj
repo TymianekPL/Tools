@@ -72,6 +72,10 @@
       <Project>{26787ad5-c15c-451a-9df8-97ebd322bf7f}</Project>
       <Name>Tools.Diagnostic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Tools.Net\Tools.Net.csproj">
+      <Project>{504383b7-30eb-41a0-a3d9-5dbcc5ee3463}</Project>
+      <Name>Tools.Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Tools.Window\Tools.Window.csproj">
       <Project>{f5851283-ca82-46ad-91a7-563c2fbc6d5e}</Project>
       <Name>Tools.Window</Name>
@@ -80,6 +84,12 @@
       <Project>{6871b5f4-6a32-407d-8f5a-51b38bf74d13}</Project>
       <Name>Tools</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="src\index.html" />
+    <Content Include="src\script.js" />
+    <Content Include="src\styles.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
