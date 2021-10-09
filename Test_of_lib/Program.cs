@@ -1,75 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
 using Tools;
-using Tools.Window;
-using Tools.Window.Components;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-using Math = Tools.Math;
-using Debug = Tools.Diagnostic.Debug;
-using System.Threading;
 using Tools.Diagnostic;
-using System.Runtime.CompilerServices;
-using Tools.Net;
-using System.Net;
-using System.IO;
 
-namespace Test_of_lib
+class Program
 {
-    class Program
+    private static bool debugMode = false;
+    static void Main(string[] args)
     {
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        static void Main(string[] args)
+        foreach (string arg in args)
         {
-            Debug debug = new Debug(500);
-            debug.Run();
-            debug.Updated += Debug_Updated;
-            try
+            switch (arg)
             {
-
-                Http http = new Http(IPAddress.Parse("127.0.0.1"), 8080);
-                http.Start((res, req, listener) =>
-                {
-                    string filename = $"../../src{req.RawUrl}";
-                    byte[] bytes = { };
-                    try
-                    {
-                        bytes = File.ReadAllBytes(filename);
-                        if(filename.EndsWith(".html"))
-                            res.ContentType = "text/html";
-                        else if(filename.EndsWith(".css"))
-                            res.ContentType = "text/css";
-                        else if(filename.EndsWith(".js"))
-                            res.ContentType = "text/javascript";
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        res.ContentType = "text/html";
-                        res.StatusCode = 404;
-                        bytes = Encoding.UTF8.GetBytes("<!DOCTYPE html><html><head><title>Not found</title></head><body><h1>404 not found</h1><h4>Requested document was not found</h4></body></html>");
-                    }
-                    res.OutputStream.Write(bytes, 0, bytes.Length);
-                    res.ContentEncoding = Encoding.UTF8;
-                    res.OutputStream.Close();
-                });
+                case "--debug":
+                    debugMode = true;
+                    break;
+                default:
+                Console.WriteLine($"Invalid argument '{arg}'");
+                Environment.Exit(1);
+                break;
             }
-            catch
-            {
-
-            }
-            Console.ReadLine();
         }
-
-        private static void Debug_Updated(object sender, TaskUpdateEventArgs e)
+        #region Debug
+        Debug debug = new(3000);
+        debug.Run();
+        debug.Updated += Debug_Updated;
+        #endregion
+        if(debugMode)
+            Console.WriteLine("Debug mode enabled");
+        try
         {
-            if (e.Log.TaskID == TaskID.Exception || e.Log.TaskID == TaskID.UnhandlerException)
+            TimeoutTime time = new TimeoutTime()
             {
-                Exception ex = (Exception)e.Log.Data;
-                Console.WriteLine($"[{e.Log.ID}] - Exception found: {ex.Message}\nClass: {ex.GetType().Name}");
-            }
+                Hours = 789534,
+                Milliseconds = 84,
+                Minutes = 58,
+                Seconds = 78953,
+                Days = 785
+            };
+            Console.WriteLine(time.ToString());
+            TimeSpan span = new(29,980, 10);
+            time += span;
+            Console.WriteLine(time.ToString());
+        }
+        catch
+        {
+        }
+        if (debugMode)
+        {
+            Console.Write("Press any key to continue...");
+            Console.ReadKey();
         }
     }
+
+    #region DebugMethods
+    private static void Debug_Updated(object sender, TaskUpdateEventArgs e)
+    {
+        if (e.Log.TaskID == TaskID.Exception || e.Log.TaskID == TaskID.UnhandlerException)
+        {
+            Exception ex = (Exception)e.Log.Data;
+            Console.WriteLine($"[{e.Log.ID}/{ex.GetType().Name}] - {ex.Message}");
+        }
+        else if(debugMode && e.Log.TaskID == TaskID.Auto)
+        {
+            UpdateDiagnostic data = (UpdateDiagnostic)e.Log.Data;
+            Console.WriteLine($"[{e.Log.ID}/{e.Log.TaskID}] - {data}");
+        }
+    }
+    #endregion
 }
