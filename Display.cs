@@ -20,8 +20,8 @@ namespace Tools
                 throw new ArgumentOutOfRangeException(nameof(DisplayNumber), DisplayNumber, "First display is 1.");
 
             bool result = false;
-            DISPLAY_DEVICE d = new DISPLAY_DEVICE();
-            DEVMODE dm = new DEVMODE();
+            DISPLAY_DEVICE d = new();
+            DEVMODE dm = new();
             d.cb = Marshal.SizeOf(d);
 
             if (!NativeMethods.EnumDisplayDevices(null, DisplayNumber - 1, ref d, 0))
