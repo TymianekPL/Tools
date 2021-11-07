@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
+<html lang="">
+
+     <head>
+          <meta charset="utf-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <title>Example server</title>
+          <meta name="description" content="">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+               integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+               crossorigin="anonymous">
+          <link rel="stylesheet" href="/assets/css/default.css">
+     </head>
+
+     <body class="container">
+          <!--[if lt IE 7]>
+               <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+          <![endif]-->
+          <br />
+          <br />
+          <br />
+          <br />
+          <h1>Download extensions</h1>
+          <div class="controls">
+               <h2>Core packages</h2>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" checked disabled type="checkbox" value="Tools.dll"
+                         id="Tools.dll">
+                    <label class="form-check-label" for="Tools.dll">
+                         Core
+                    </label>
+               </div>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" checked type="checkbox" value="Tools.Net.dll"
+                         id="Tools.Net.dll">
+                    <label class="form-check-label" for="Tools.Net.dll">
+                         Core - Networking
+                    </label>
+               </div>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" checked type="checkbox" value="Tools.Diagnostic.dll"
+                         id="Tools.Diagnostic.dll">
+                    <label class="form-check-label" for="Tools.Diagnostic.dll">
+                         Core - Diagnostic
+                    </label>
+               </div>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" checked type="checkbox" value="Tools.Window.dll"
+                         id="Tools.Window.dll">
+                    <label class="form-check-label" for="Tools.Window.dll">
+                         Core - Window
+                    </label>
+               </div>
+               <h2>Optional components</h2>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" type="checkbox" value="Tools.Window.Components.Extenstion.ModernUI.dll"
+                         id="Tools.Window.Components.Extenstion.ModernUI">
+                    <label class="form-check-label" for="Tools.Window.Components.Extenstion.ModernUI">
+                         Tools.Window.Components.Extenstion.ModernUI
+                    </label>
+               </div>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" type="checkbox" value="Tools.Net.Extensions.WebSocket.dll"
+                         id="Tools.Net.Extensions.WebSocket">
+                    <label class="form-check-label" for="Tools.Net.Extensions.WebSocket">
+                         Tools.Net.Extensions.WebSocket
+                    </label>
+               </div>
+               <div class="form-check form-check-inline">
+                    <input class="form-check-input ch" type="checkbox" value="Tools.Diagnostic.Extensions.Privilages.dll"
+                         id="Tools.Diagnostic.Extensions.Privilages">
+                    <label class="form-check-label" for="Tools.Diagnostic.Extensions.Privilages">
+                         Tools.Diagnostic.Extensions.Privilages
+                    </label>
+               </div>
+               <br />
+               <script src="./assets/scripts/jszip.js"></script>
+               <script src="./file-saver/dist/FileSaver.js"></script>
+               <button type="submit" class="btn btn-primary" onclick="download();">Download</button>
+               <script>
+                    var zip = new JSZip();
+                    async function download() {
+                         (async() => {
+                         const checkboxes = document.getElementsByClassName("ch");
+                         console.log(checkboxes);
+                         let list = `List of downloaded libraries\n`;
+                         let files = "";
+                         for (const key in checkboxes) {
+                              if (Object.hasOwnProperty.call(checkboxes, key)) {
+                                   const box = checkboxes[key];
+                                   if (box.checked) {
+                                        list += `${box.id}\n`;
+                                        files += `${box.value}\n`;
+                                        console.log(box);
+                                   }
+                              }
+                         }
+                         const lines = files.split('\n');
+                         var libs = zip.folder("libs");
+                         for (const key in lines) {
+                              if (Object.hasOwnProperty.call(lines, key)) {
+                                   const e = lines[key];
+                                   console.log(e);
+                                   list += `${e}\n`;
+                                   const blob = await fetch(e);
+                                   //.then(res => res.blob())
+                                   //.then(blob => {
+
+                                   //});
+                                   console.log("downloaded");
+                                   const b = await blob.blob();
+                                   const r = await b.arrayBuffer();
+                                   console.log(r);
+                                   libs.file(e, r);
+                              }
+                         }
+                         zip.file("list.txt", list);
+                         zip.generateAsync({type: "blob"})
+                              .then(function (content) {
+                                   // see FileSaver.js
+                                   console.log("Open");
+                                   saveAs(content, "libraries.zip");
+                              });
+                         })();
+                    }
+               </script>
+          </div>
+
+          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+               integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+               crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+               integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+               crossorigin="anonymous"></script>
+
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+               integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+               crossorigin="anonymous"></script>
+          <script src="/assets/scripts/main.js" async defer></script>
+     </body>
+
+</html>

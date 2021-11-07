@@ -1,0 +1,16 @@
+body {
+     background-color: #1e1e1e;
+     color: snow;
+}
+div {
+     padding: 10px;
+     margin: 5px;
+     margin-left: 0px;
+}
+button {
+     padding: 10px;
+     margin-top: 10px;
+}
+div.controls {
+     margin-left: 5px;
+}

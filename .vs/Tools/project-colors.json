@@ -35,7 +35,12 @@
       "ProjectGuid": "58fc95f1-ab98-481e-a52c-d176c9c6ca7d",
       "DisplayName": "Tools.Net.Extensions.WebSockets",
       "ColorIndex": 5
+    },
+    "6871b5f4-6a32-407d-8f5a-51b38bf74d13": {
+      "ProjectGuid": "6871b5f4-6a32-407d-8f5a-51b38bf74d13",
+      "DisplayName": "Tools",
+      "ColorIndex": 6
     }
   },
-  "NextColorIndex": 6
+  "NextColorIndex": 7
 }
