@@ -9,7 +9,7 @@
 extern "C" bool __declspec(dllexport) ShutdownA()
 {
     HANDLE hToken;
-    TOKEN_PRIVILEGES tkp;
+    TOKEN_PRIVILEGES tkp{};
 
     // Get a token for this process. 
 
@@ -49,7 +49,7 @@ extern "C" bool __declspec(dllexport) ShutdownA()
 extern "C" bool __declspec(dllexport) RestartA()
 {
     HANDLE hToken;
-    TOKEN_PRIVILEGES tkp;
+    TOKEN_PRIVILEGES tkp{};
 
     // Get a token for this process. 
 
