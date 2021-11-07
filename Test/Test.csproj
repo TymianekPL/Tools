@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Tools.Diagnostic\Tools.Diagnostic.csproj" />
+    <ProjectReference Include="..\Tools.Net.Extensions.WebSocket\Tools.Net.Extensions.WebSockets.csproj" />
+    <ProjectReference Include="..\Tools.Net\Tools.Net.csproj" />
+    <ProjectReference Include="..\Tools.Window\Tools.Window.csproj" />
+    <ProjectReference Include="..\Tools\Tools.csproj" />
+  </ItemGroup>
+
+</Project>

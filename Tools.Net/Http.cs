@@ -27,20 +27,26 @@ namespace Tools.Net
 
         public Action<HttpAdress[]> OnStart { get; set; }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Http(IPAddress IP, int PORT)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             Array.Resize(ref adresses, 1);
             adresses[0].PORT = PORT;
             adresses[0].IP = IP;
         }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Http(HttpAdress adress)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             Array.Resize(ref adresses, 1);
             adresses[0] = adress;
         }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public Http(HttpAdress[] adresses)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             this.adresses = adresses;
         }

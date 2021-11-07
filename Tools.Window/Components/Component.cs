@@ -23,7 +23,7 @@ namespace Tools.Window.Components
         {
             return new ComponentCollectionEnum(list);
         }
-        internal Component[] list = { };
+        internal Component[] list = Array.Empty<Component>();
 
         public bool Contains(Component component)
         {
@@ -67,7 +67,7 @@ namespace Tools.Window.Components
                     throw new ArgumentException("Key already in list!", nameof(key));
             }
             Array.Resize(ref list, list.Length + 1);
-            list[list.Length - 1] = key;
+            list[^1] = key;
         }
 
         public Component this[int key]
@@ -80,6 +80,12 @@ namespace Tools.Window.Components
             {
                 list[key] = value;
             }
+        }
+
+        public static ComponentCollection operator +(ComponentCollection a, Component b)
+        {
+            a.Add(b);
+            return a;
         }
     }
     public class ComponentCollectionEnum : IEnumerator
@@ -132,7 +138,7 @@ namespace Tools.Window.Components
 
     public abstract class Component : IComponent 
     {
-        public ComponentCollection components = new ComponentCollection();
+        public ComponentCollection components = new();
 
         internal abstract IntPtr Implement(IntPtr parent);
 

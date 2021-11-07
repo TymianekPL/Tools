@@ -1,0 +1,13 @@
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\bin\Debug\net6.0\Tools.Net.Extensions.WebSockets.deps.json
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\bin\Debug\net6.0\Tools.Net.Extensions.WebSockets.dll
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\bin\Debug\net6.0\ref\Tools.Net.Extensions.WebSockets.dll
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\bin\Debug\net6.0\Tools.Net.Extensions.WebSockets.pdb
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.GlobalUsings.g.cs
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.csproj.AssemblyReference.cache
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.GeneratedMSBuildEditorConfig.editorconfig
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.AssemblyInfoInputs.cache
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.AssemblyInfo.cs
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.csproj.CoreCompileInputs.cache
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.dll
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\ref\Tools.Net.Extensions.WebSockets.dll
+E:\projects\Tools\Tools.Net.Extensions.WebSocket\obj\Debug\net6.0\Tools.Net.Extensions.WebSockets.pdb

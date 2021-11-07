@@ -1,0 +1,13 @@
+E:\projects\Tools\Tools\bin\Debug\net6.0\Tools.deps.json
+E:\projects\Tools\Tools\bin\Debug\net6.0\Tools.dll
+E:\projects\Tools\Tools\bin\Debug\net6.0\ref\Tools.dll
+E:\projects\Tools\Tools\bin\Debug\net6.0\Tools.pdb
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.GlobalUsings.g.cs
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.csproj.AssemblyReference.cache
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.GeneratedMSBuildEditorConfig.editorconfig
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.AssemblyInfoInputs.cache
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.AssemblyInfo.cs
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.csproj.CoreCompileInputs.cache
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.dll
+E:\projects\Tools\Tools\obj\Debug\net6.0\ref\Tools.dll
+E:\projects\Tools\Tools\obj\Debug\net6.0\Tools.pdb

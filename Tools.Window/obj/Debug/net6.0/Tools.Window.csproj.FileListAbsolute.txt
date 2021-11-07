@@ -1,0 +1,16 @@
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.GlobalUsings.g.cs
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.csproj.AssemblyReference.cache
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.GeneratedMSBuildEditorConfig.editorconfig
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.AssemblyInfoInputs.cache
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.AssemblyInfo.cs
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.csproj.CoreCompileInputs.cache
+E:\projects\Tools\Tools.Window\bin\Debug\net6.0\Tools.Window.deps.json
+E:\projects\Tools\Tools.Window\bin\Debug\net6.0\Tools.Window.dll
+E:\projects\Tools\Tools.Window\bin\Debug\net6.0\ref\Tools.Window.dll
+E:\projects\Tools\Tools.Window\bin\Debug\net6.0\Tools.Window.pdb
+E:\projects\Tools\Tools.Window\bin\Debug\net6.0\Tools.dll
+E:\projects\Tools\Tools.Window\bin\Debug\net6.0\Tools.pdb
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.dll
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\ref\Tools.Window.dll
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.pdb
+E:\projects\Tools\Tools.Window\obj\Debug\net6.0\Tools.Window.csproj.CopyComplete

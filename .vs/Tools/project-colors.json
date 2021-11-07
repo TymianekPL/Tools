@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "3c1bdc7c-12da-4c21-9c29-f9d515dbc202": {
+      "ProjectGuid": "3c1bdc7c-12da-4c21-9c29-f9d515dbc202",
+      "DisplayName": "Test",
+      "ColorIndex": 0
+    },
+    "0a2a0bef-163d-48ae-820c-1b2a6566a129": {
+      "ProjectGuid": "0a2a0bef-163d-48ae-820c-1b2a6566a129",
+      "DisplayName": "Tools",
+      "ColorIndex": 1
+    },
+    "732a8435-8b71-4a4c-8915-10afcaebb6a4": {
+      "ProjectGuid": "732a8435-8b71-4a4c-8915-10afcaebb6a4",
+      "DisplayName": "Tools.Net",
+      "ColorIndex": 2
+    },
+    "b2852baf-2aa7-41fa-8ab7-abed58af0b67": {
+      "ProjectGuid": "b2852baf-2aa7-41fa-8ab7-abed58af0b67",
+      "DisplayName": "Tools.Diagnostic",
+      "ColorIndex": 3
+    },
+    "ab117c1c-78b1-4d78-adc5-c58cbdcbaecb": {
+      "ProjectGuid": "ab117c1c-78b1-4d78-adc5-c58cbdcbaecb",
+      "DisplayName": "Tools.Window",
+      "ColorIndex": 4
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "58fc95f1-ab98-481e-a52c-d176c9c6ca7d": {
+      "ProjectGuid": "58fc95f1-ab98-481e-a52c-d176c9c6ca7d",
+      "DisplayName": "Tools.Net.Extensions.WebSockets",
+      "ColorIndex": 5
+    }
+  },
+  "NextColorIndex": 6
+}

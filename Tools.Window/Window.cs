@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
-using System.Windows.Interop;
 using System.Reflection;
 using System.Threading;
 using Tools.Window.Components;
@@ -38,7 +37,7 @@ namespace Tools.Window
 
     public class WindowBase : Component, IWindowBase
     {
-        private WindowBase _instance;
+        private WindowBase? _instance;
         public WindowBase Instance
         {
             get
@@ -63,12 +62,12 @@ namespace Tools.Window
             }
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public WindowStyle Style { get; set; }
-        public string Title { get; set; }
+        public int X { get; set; } = 60;
+        public int Y { get; set; } = 20;
+        public int Width { get; set; } = 1000;
+        public int Height { get; set; } = 800;
+        public WindowStyle Style { get; set; } = WindowStyle.Default;
+        public string Title { get; set; } = "My app";
         public override string Name { get; internal set; } = nameof(Window);
 
         delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
@@ -98,7 +97,7 @@ namespace Tools.Window
             [System.Runtime.InteropServices.In] ref WNDCLASS lpWndClass
         );
         [DllImport("WinAPI.dll")]
-        public static extern void Create();
+        internal static extern void Create();
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
         static extern IntPtr CreateWindowExW(
            UInt32 dwExStyle,
@@ -136,7 +135,9 @@ namespace Tools.Window
         public void Dispose()
         {
             Dispose(true);
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
             GC.SuppressFinalize(this);
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         }
 
         private void Dispose(bool disposing)
@@ -177,7 +178,7 @@ namespace Tools.Window
             m_wnd_proc_delegate = CustomWndProc;
 
             // Create WNDCLASS
-            WNDCLASS wind_class = new WNDCLASS
+            WNDCLASS wind_class = new()
             {
                 lpszClassName = class_name,
                 lpfnWndProc = Marshal.GetFunctionPointerForDelegate(m_wnd_proc_delegate)
@@ -231,15 +232,15 @@ namespace Tools.Window
             return DefWindowProcW(hWnd, msg, wParam, lParam);
         }
 
-        private WndProc m_wnd_proc_delegate;
+        private WndProc? m_wnd_proc_delegate;
 
-        internal string CLASS_NAME;
+        internal string? CLASS_NAME;
 
         public void Close()
         {
             if(!DestroyWindow(m_hwnd))
             {
-                System.ComponentModel.Win32Exception ex = new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+                System.ComponentModel.Win32Exception ex = new(Marshal.GetLastWin32Error());
                 MessageBox.Show($"An error occured. Parameters: {ex.Message}, 0x{ex.NativeErrorCode}", "Critical error", MessageBoxButtons.Ok, MessageBoxIcon.Error);
             }
         }
@@ -283,7 +284,7 @@ namespace Tools.Window
         public IWindow.WindowLocation Location { get; set; }
         public IWindow.WindowSize Size { get; set; }
 
-        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
+        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Unicode)]
         static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll", EntryPoint = "SendMessage", SetLastError = true)]
         static extern IntPtr SendMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
@@ -334,24 +335,24 @@ namespace Tools.Window
 
         public delegate void StartHandler(object sender, StartHandlerArgs e);  // delegate
         public delegate void ShowedHandler(object sender, ShowedHandlerArgs e);  // delegate
-        public event StartHandler Start;
-        public event ShowedHandler Showed;
+        public event StartHandler? Start;
+        public event ShowedHandler? Showed;
         internal IntPtr window;
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, StringBuilder lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, StringBuilder lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref IntPtr lParam);
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref IntPtr lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
 
         public void InitializeComponents()
         {
@@ -381,7 +382,7 @@ namespace Tools.Window
             ShowWindow(window, (int)Style);
             Showed?.Invoke(this, new ShowedHandlerArgs());
             UpdateWindow(window);
-            MSG msg = new MSG();
+            MSG msg = new();
             while (GetMessage(out msg, window, 0, 0) != -1)
             {
                 TranslateMessage(ref msg);

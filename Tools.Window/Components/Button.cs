@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Tools.Window.Components
 {
@@ -26,8 +25,8 @@ namespace Tools.Window.Components
         [DllImport("user32.dll")]
         private static extern IntPtr GetWindowLong(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll")]
-        public static extern IntPtr CreateWindowEx(
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        internal static extern IntPtr CreateWindowEx(
 uint dwExStyle, 
 string lpClassName, 
 string lpWindowName, 

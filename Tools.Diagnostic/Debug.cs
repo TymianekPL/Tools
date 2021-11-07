@@ -8,8 +8,8 @@ namespace Tools.Diagnostic
 {
     public class Debug
     {
-        public TaskResult Result { get; private set; }
-        public TaskSummary Summary { get; private set; }
+        public TaskResult? Result { get; private set; }
+        public TaskSummary? Summary { get; private set; }
 
         private bool running = true;
 
@@ -36,9 +36,11 @@ namespace Tools.Diagnostic
                     TaskID = TaskID.UnhandlerException,
                     Data = ex
                 };
+#pragma warning disable CS8604 // Possible null reference argument.
                 Result += log;
+#pragma warning restore CS8604 // Possible null reference argument.
 
-                TaskUpdateEventArgs e = new TaskUpdateEventArgs
+                TaskUpdateEventArgs e = new()
                 {
                     Reason = "Unhandled exception found",
                     Log = log
@@ -62,9 +64,11 @@ namespace Tools.Diagnostic
                     TaskID = TaskID.Exception,
                     Data = eventArgs.Exception
                 };
+#pragma warning disable CS8604 // Possible null reference argument.
                 Result += log;
+#pragma warning restore CS8604 // Possible null reference argument.
 
-                TaskUpdateEventArgs e = new TaskUpdateEventArgs
+                TaskUpdateEventArgs e = new()
                 {
                     Reason = "Exception found",
                     Log = log
@@ -77,24 +81,18 @@ namespace Tools.Diagnostic
             {
                 while (running)
                 {
-                    PCResource resource = new PCResource
+                    PCResource resource = new()
                     {
                         Memory = 100
                     };
-                    DeviceState deviceState = new DeviceState
-                    {
-                        Name = Environment.MachineName,
-                        WindowsVersion = Environment.OSVersion.Version,
-                        WindowsPlatform = Environment.OSVersion.Platform,
-                        WindowsServicePack = Environment.OSVersion.ServicePack
-                    };
-                    UpdateDiagnostic diagnostic = new UpdateDiagnostic
+                    DeviceState deviceState = new(Environment.MachineName, Environment.OSVersion.Version, Environment.OSVersion.ServicePack, Environment.OSVersion.Platform);
+                    UpdateDiagnostic diagnostic = new()
                     {
                         Resource = resource,
                         WindowsDeviceState = deviceState
                     };
 
-                    TaskLog log = new TaskLog
+                    TaskLog log = new()
                     {
                         Name = "Auto check update",
                         TaskID = TaskID.Auto,
@@ -102,7 +100,7 @@ namespace Tools.Diagnostic
                     };
                     Result += log;
 
-                    TaskUpdateEventArgs e = new TaskUpdateEventArgs
+                    TaskUpdateEventArgs e = new()
                     {
                         Reason = "Automatic time update",
                         Log = log
@@ -126,7 +124,7 @@ namespace Tools.Diagnostic
 
         public delegate void DebugHandle(object sender, TaskUpdateEventArgs e);
 
-        public event DebugHandle Updated;
+        public event DebugHandle? Updated;
     }
 
     public class DeviceState
@@ -135,20 +133,25 @@ namespace Tools.Diagnostic
         public Version WindowsVersion { get; internal set; }
         public string WindowsServicePack { get; internal set; }
         public PlatformID WindowsPlatform { get; internal set; }
+
+        public DeviceState(string name, Version windowsVersion, string windowsServicePack, PlatformID windowsPlatform)
+        {
+            Name = name;
+            WindowsVersion = windowsVersion;
+            WindowsServicePack = windowsServicePack;
+            WindowsPlatform = windowsPlatform;
+        }
     }
 
     public class UpdateDiagnostic
     {
-        public DeviceState WindowsDeviceState { get; internal set; }
-        public PCResource Resource { get; internal set; }
+        public DeviceState? WindowsDeviceState { get; internal set; }
+        public PCResource? Resource { get; internal set; }
 
-        public override string ToString()
-        {
-            return $"Windows:\n" +
+        public override string ToString() => $"Windows:\n" +
                 $"\tVersion: {WindowsDeviceState.WindowsPlatform}/{WindowsDeviceState.WindowsVersion}\n" +
                 $"Resources:\n" +
                 $"\tMemory: {Resource.Memory}";
-        }
     }
 
     public class PCResource
@@ -186,7 +189,7 @@ namespace Tools.Diagnostic
             Name = name;
         }
 
-        public object Data { get; internal set; }
+        public object? Data { get; internal set; }
     }
 
     public class TaskResult
@@ -199,19 +202,19 @@ namespace Tools.Diagnostic
             }
         }
 
-        private TaskLog[] list = { };
+        private TaskLog[] list = Array.Empty<TaskLog>();
 
         public static TaskResult operator +(TaskResult task, TaskLog log)
         {
             Array.Resize(ref task.list, task.list.Length + 1);
             log.ID = task.list.Length;
-            task.list[task.list.Length - 1] = log;
+            task.list[^1] = log;
             return task;
         }
 
         public TaskLog Last()
         {
-            return list[list.Length - 1];
+            return list[^1];
         }
     }
 
