@@ -49,7 +49,7 @@ namespace Tools
 
         public static TimeSpan operator +(TimeSpan span, TimeoutTime time)
         {
-            TimeSpan _span = new TimeSpan(days: time.Days, hours: time.Hours, minutes: time.Minutes, seconds: time.Seconds, milliseconds: time.Milliseconds);
+            TimeSpan _span = new(days: time.Days, hours: time.Hours, minutes: time.Minutes, seconds: time.Seconds, milliseconds: time.Milliseconds);
             span.Add(_span);
             return span;
         }

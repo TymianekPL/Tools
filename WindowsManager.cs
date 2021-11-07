@@ -15,10 +15,8 @@ namespace Tools
         private static extern void NtRaiseHardError(ulong x, ulong y, ulong z, ulong c, ulong a, out ulong b);
         public static void InvokeBSOD()
         {
-            Boolean bl;
-            RtlAdjustPrivilege(19, true, false, out bl);
-            ulong res;
-            NtRaiseHardError(0xC0000420L, 0, 0, 0, 6, out res);
+            RtlAdjustPrivilege(19, true, false, out _);
+            NtRaiseHardError(0xC0000420L, 0, 0, 0, 6, out _);
         }
     }
 }

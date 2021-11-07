@@ -81,7 +81,7 @@ namespace Tools
                     throw new ArgumentException("Key already in list!", nameof(key));
             }
             Array.Resize(ref list, list.Length + 1);
-            Res<Tkey, TValue> r = new Res<Tkey, TValue>
+            Res<Tkey, TValue> r = new()
             {
                 key = key,
                 value = value

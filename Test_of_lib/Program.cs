@@ -1,195 +1,101 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Web;
 using Tools;
-using Tools.Net;
+using static Test_of_lib.Win32API;
 
 class Program
 {
-    [DebuggerNonUserCode]
+    [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
+    public static extern bool AdjustTokenPrivileges(IntPtr htok, bool disall,
+    ref TokPriv1Luid newst, int len, IntPtr prev, IntPtr relen);
+    [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
+    internal static extern bool OpenProcessToken(IntPtr h, int acc, ref IntPtr phtok);
+
+    [DllImport("advapi32.dll", SetLastError = true)]
+    internal static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    internal struct TokPriv1Luid
+    {
+        public int Count;
+        public long Luid;
+        public int Attr;
+    }
+
+    internal const int SE_PRIVILEGE_ENABLED = 0x00000002;
+    internal const int SE_PRIVILEGE_DISABLED = 0x00000000;
+    internal const int TOKEN_QUERY = 0x00000008;
+    internal const int TOKEN_ADJUST_PRIVILEGES = 0x00000020;
+
+    public static bool EnablePrivilege(IntPtr processHandle, string privilege, bool disable)
+    {
+        bool retVal;
+        TokPriv1Luid tp;
+        IntPtr hproc = processHandle;
+        IntPtr htok = IntPtr.Zero;
+        retVal = OpenProcessToken(hproc, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, ref htok);
+        tp.Count = 1;
+        tp.Luid = 0;
+
+        if (disable)
+        {
+            tp.Attr = SE_PRIVILEGE_DISABLED;
+        }
+        else
+        {
+            tp.Attr = SE_PRIVILEGE_ENABLED;
+        }
+
+        retVal = LookupPrivilegeValue(null, privilege, ref tp.Luid);
+        retVal = AdjustTokenPrivileges(htok, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero);
+        return retVal;
+    }
     static void Main(string[] args)
     {
-        HttpAdress[] addresses = new HttpAdress[]
+        IntPtr hToken = IntPtr.Zero;
+        IntPtr dupeTokenHandle = IntPtr.Zero;
+        // For simplicity I'm using the PID of System here
+        Process proc = Process.GetProcessById(8480);
+        Console.WriteLine(proc.ProcessName);
+        if (!EnablePrivilege(Process.GetCurrentProcess().Handle, "SeDebugPrivilege", false))
         {
-            new HttpAdress()
-            {
-                IP = IPAddress.Any,
-                PORT = 80
-            },
-        };
-        int lenght = 0;
-        foreach (string arg in args)
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+        var h = Win32.OpenProcess((uint)Win32.ProcessAccessFlags.All, false, proc.Id);
+        if (h == IntPtr.Zero)
         {
-            switch (arg)
+            Console.WriteLine("Error");
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+        var r = OpenProcessToken(h,
+        Win32.TOKEN_QUERY | Win32.TOKEN_IMPERSONATE | Win32.TOKEN_DUPLICATE,
+        ref hToken);
+        if (hToken == IntPtr.Zero)
+        {
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+        if (r)
+        {
+            WindowsIdentity newId = new(hToken);
+            StringBuilder result = new();
+            if (!CreateProcessAsUser(args[0], @"C:\Windows", out result, hToken))
             {
-                case "--port":
-                    if (args.Length > lenght + 1)
-                    {
-                        if (int.TryParse(args[lenght + 1], out int port))
-                        {
-                            Array.Resize(ref addresses, addresses.Length + 1);
-                            addresses[addresses.Length - 1] = new HttpAdress()
-                            {
-                                IP = IPAddress.Any,
-                                PORT = port
-                            };
-                        }
-                        else
-                        {
-                            Console.WriteLine($"'{args[lenght + 1]}' is not valid number!\nusage: --port <number>");
-                            Console.Write("Press any key to continue...");
-                            Console.ReadKey();
-                            Environment.Exit(1);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("usage: --port <number>");
-                        Console.Write("Press any key to continue...");
-                        Console.ReadKey();
-                        Environment.Exit(1);
-                    }
-                    break;
+                Console.WriteLine(result.ToString());
+                throw new Win32Exception(Marshal.GetLastWin32Error());
             }
-            lenght++;
         }
-        while (true)
+        else
         {
-            Http http = new(addresses);
-            http.OnStart = (adresses) =>
-            {
-                if (adresses.Length > 1)
-                {
-                    Console.Write("Server started on ");
-                    int num = 0;
-                    foreach (HttpAdress adress in adresses)
-                    {
-                        if (num >= adresses.Length - 1)
-                        {
-                            Console.WriteLine($"and {adress}");
-                        }
-                        else if (num >= adresses.Length - 2)
-                        {
-                            Console.Write($"{adress} ");
-                        }
-                        else
-                        {
-                            Console.Write($"{adress}, ");
-                        }
-                        num++;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Server started on {adresses[0]}");
-                }
-            };
-            http.Start((res, req, listener) =>
-            {
-                ServerConfig config = new();
-                res.StatusCode = (int)HttpStatusCode.OK;
-                res.ContentType = "application/json";
-                byte[] response;
-                string filename = $@"..\..\src{req.Url.AbsolutePath}".Replace("/", "\\");
-                if (File.Exists(@"..\..\src\.serverconfig"))
-                {
-                    string[] lines = File.ReadAllLines(@"..\..\src\.serverconfig");
-                    foreach (string line in lines)
-                    {
-                        string[] words = line.Split(':');
-                        string name = words[0];
-                        string value = words[1];
-                        switch (name)
-                        {
-                            case "header":
-                                if (File.Exists(@"..\..\src\" + value.Replace("/", "\\")))
-                                    config.Header = value;
-                                break;
-                            case "footer":
-                                if (File.Exists(@"..\..\src\" + value.Replace("/", "\\")))
-                                    config.Footer = value;
-                                break;
-                            case "404":
-                                if (File.Exists(@"..\..\src\" + value.Replace("/", "\\")))
-                                    config.NotFound = value;
-                                break;
-                        }
-                    }
-                }
-                try
-                {
-                    string text = File.ReadAllText(filename);
-                    if (config.Header != null)
-                        text = text.Replace("{{header}}", File.ReadAllText(@"..\..\src\" + config.Header.Replace("/", "\\")));
-                    if (config.Footer != null)
-                        text = text.Replace("{{footer}}", File.ReadAllText(@"..\..\src\" + config.Footer.Replace("/", "\\")));
-                    response = Encoding.UTF8.GetBytes(text);
-                    res.ContentType = MimeMapping.GetMimeMapping(filename);
-                }
-                catch (UnauthorizedAccessException e)
-                {
-                    res.StatusCode = (int)HttpStatusCode.Forbidden;
-                    response = Encoding.UTF8.GetBytes("{\"error\":403,\"message\":\"" + e.Message + "\"}");
-                }
-                catch (Exception e)
-                {
-                    if (e is FileNotFoundException || e is DirectoryNotFoundException)
-                    {
-                        if (filename.EndsWith("\\") && File.Exists($"{filename}index.html"))
-                        {
-                            string text = File.ReadAllText($"{filename}index.html");
-                            if (config.Header != null)
-                                text = text.Replace("{{header}}", File.ReadAllText(@"..\..\src\" + config.Header.Replace("/", "\\")));
-                            if (config.Footer != null)
-                                text = text.Replace("{{footer}}", File.ReadAllText(@"..\..\src\" + config.Footer.Replace("/", "\\")));
-                            response = Encoding.UTF8.GetBytes(text);
-                            res.ContentType = MimeMapping.GetMimeMapping($"{filename}index.html");
-                        }
-                        else if (File.Exists($"{filename}\\index.html"))
-                        {
-                            string text = File.ReadAllText($"{filename}\\index.html");
-                            if (config.Header != null)
-                                text = text.Replace("{{header}}", File.ReadAllText(@"..\..\src\" + config.Header.Replace("/", "\\")));
-                            if (config.Footer != null)
-                                text = text.Replace("{{footer}}", File.ReadAllText(@"..\..\src\" + config.Footer.Replace("/", "\\")));
-                            response = Encoding.UTF8.GetBytes(text);
-                            res.ContentType = MimeMapping.GetMimeMapping($"{filename}\\index.html");
-                        }
-                        else
-                        {
-                            if (config.NotFound == null)
-                            {
-                                res.StatusCode = (int)HttpStatusCode.NotFound;
-                                response = Encoding.UTF8.GetBytes("{\"error\":404,\"message\":\"File '" + req.Url.AbsolutePath + "' was not found on this server\"}");
-                            }
-                            else
-                            {
-                                res.StatusCode = (int)HttpStatusCode.NotFound;
-                                response = File.ReadAllBytes(@"..\..\src\" + config.NotFound.Replace("/", "\\"));
-                                res.ContentType = MimeMapping.GetMimeMapping(@"..\..\src\" + config.NotFound.Replace("/", "\\"));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        res.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        response = Encoding.UTF8.GetBytes($@"{{""error"":500,""message"":""{e.Message}"",""class"":""{e.GetType()}""}}");
-                    }
-                }
-                res.ContentLength64 = response.Length;
-                res.OutputStream.Write(response, 0, response.Length);
-                res.Close();
-            });
-            Console.WriteLine("Server crashed/stopped. Restarting!");
+            Console.WriteLine("Error");
+            throw new Win32Exception(Marshal.GetLastWin32Error());
         }
-    }
-    public struct ServerConfig
-    {
-        public string NotFound { get; internal set; }
-        public string Header { get; internal set; }
-        public string Footer { get; internal set; }
+        Console.ReadLine();
     }
 }

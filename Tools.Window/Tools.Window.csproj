@@ -4,18 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A4C0F88D-9C76-4460-8586-061D0BCA2DFF}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Test_of_lib</RootNamespace>
-    <AssemblyName>Test_of_lib</AssemblyName>
+    <ProjectGuid>{F5851283-CA82-46AD-91A7-563C2FBC6D5E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tools.Window</RootNamespace>
+    <AssemblyName>Tools.Window</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,77 +22,45 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>false</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>07DA1A407E5DC466F9A3DD44F8FF9580F748D5F7</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>Program</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\Button.cs" />
+    <Compile Include="HandlerArgs.cs" />
+    <Compile Include="Window.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Tools.Diagnostic\Tools.Diagnostic.csproj">
-      <Project>{26787ad5-c15c-451a-9df8-97ebd322bf7f}</Project>
-      <Name>Tools.Diagnostic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.Net\Tools.Net.csproj">
-      <Project>{504383b7-30eb-41a0-a3d9-5dbcc5ee3463}</Project>
-      <Name>Tools.Net</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.Window\Tools.Window.csproj">
-      <Project>{f5851283-ca82-46ad-91a7-563c2fbc6d5e}</Project>
-      <Name>Tools.Window</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tools.csproj">
       <Project>{6871b5f4-6a32-407d-8f5a-51b38bf74d13}</Project>
       <Name>Tools</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

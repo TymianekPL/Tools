@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,12 +52,28 @@ namespace Tools
             IntPtr hproc = GetCurrentProcess();
             IntPtr htok = IntPtr.Zero;
             ok = OpenProcessToken(hproc, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, ref htok);
+            if (!ok)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
             tp.Count = 1;
             tp.Luid = 0;
             tp.Attr = SE_PRIVILEGE_ENABLED;
             ok = LookupPrivilegeValue(null, SE_SHUTDOWN_NAME, ref tp.Luid);
+            if (!ok)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
             ok = AdjustTokenPrivileges(htok, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero);
+            if (!ok)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
             ok = ExitWindowsEx(flg, 0);
+            if (!ok)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
         }
         public static void Set(PowerAction action)
         {
