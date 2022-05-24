@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 
 namespace Tools.Net.Extensions.WebSockets
@@ -19,15 +14,17 @@ namespace Tools.Net.Extensions.WebSockets
         }
         public WssAdress(IPAddress iP)
         {
-            this.IP = iP;
+            IP = iP;
             PORT = 80;
-        }public WssAdress(int PORT)
+        }
+        public WssAdress(int PORT)
         {
             this.PORT = PORT;
             IP = IPAddress.Any;
-        }public WssAdress(IPAddress iP, int PORT)
+        }
+        public WssAdress(IPAddress iP, int PORT)
         {
-            this.IP = iP;
+            IP = iP;
             this.PORT = PORT;
         }
     }
@@ -53,7 +50,7 @@ namespace Tools.Net.Extensions.WebSockets
         public void Start(Action<Socket> callback)
         {
             listener.Start();
-            listener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, null);
+            _ = listener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, null);
             this.callback = callback;
             while (running)
             {
@@ -63,8 +60,8 @@ namespace Tools.Net.Extensions.WebSockets
         private void BeginAcceptTcpClientCallback(IAsyncResult result)
         {
             Socket socket = listener.EndAcceptSocket(result);
-            var x = result.AsyncState;
-            listener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, null);
+            object? x = result.AsyncState;
+            _ = listener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, null);
             callback.Invoke(socket);
         }
     }

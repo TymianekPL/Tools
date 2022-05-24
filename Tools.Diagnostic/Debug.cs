@@ -1,10 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Tools;
-
-namespace Tools.Diagnostic
+﻿namespace Tools.Diagnostics
 {
     public class Debug
     {
@@ -29,8 +23,8 @@ namespace Tools.Diagnostic
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, er) =>
             {
-                var ex = (Exception)er.ExceptionObject;
-                var log = new TaskLog
+                Exception? ex = (Exception)er.ExceptionObject;
+                TaskLog log = new()
                 {
                     Name = "Unhandled exception",
                     TaskID = TaskID.UnhandlerException,
@@ -48,17 +42,12 @@ namespace Tools.Diagnostic
                 Updated?.Invoke(this, e);
                 if (er.IsTerminating)
                 {
-                    Console.ResetColor();
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(ex.ToString());
-                    Console.ResetColor();
-                    Thread.Sleep(1000);
-                    Environment.Exit(1);
+                    Logger.Crash((Exception)er.ExceptionObject, CrashBehaviour.Severe, "Unhandled");
                 }
             };
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
-                var log = new TaskLog
+                TaskLog log = new()
                 {
                     Name = "Exception",
                     TaskID = TaskID.Exception,
@@ -148,10 +137,13 @@ namespace Tools.Diagnostic
         public DeviceState? WindowsDeviceState { get; internal set; }
         public PCResource? Resource { get; internal set; }
 
-        public override string ToString() => $"Windows:\n" +
+        public override string ToString()
+        {
+            return $"Windows:\n" +
                 $"\tVersion: {WindowsDeviceState.WindowsPlatform}/{WindowsDeviceState.WindowsVersion}\n" +
                 $"Resources:\n" +
                 $"\tMemory: {Resource.Memory}";
+        }
     }
 
     public class PCResource
@@ -194,13 +186,7 @@ namespace Tools.Diagnostic
 
     public class TaskResult
     {
-        public int Lenght
-        {
-            get
-            {
-                return list.Length;
-            }
-        }
+        public int Lenght => list.Length;
 
         private TaskLog[] list = Array.Empty<TaskLog>();
 

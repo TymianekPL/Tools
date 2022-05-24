@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace Tools.Net
 {
@@ -15,8 +10,11 @@ namespace Tools.Net
         public override string ToString()
         {
             string IPstr = IP.ToString();
-            if(IPstr == "0.0.0.0")
+            if (IPstr == "0.0.0.0")
+            {
                 IPstr = "*";
+            }
+
             return $"http://{IPstr}:{PORT}/";
         }
     }
@@ -70,7 +68,7 @@ namespace Tools.Net
                     HttpListenerContext context = listener.GetContext();
                     HttpListenerRequest request = context.Request;
                     HttpListenerResponse response = context.Response;
-                    Task.Run(() =>
+                    _ = Task.Run(() =>
                     {
                         callback.Invoke(response, request, listener);
                     });

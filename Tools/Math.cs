@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tools
+﻿namespace Tools
 {
     /// <summary>
     /// Vector 3D
@@ -64,7 +58,7 @@ namespace Tools
             this.W = W;
         }
     }
-    
+
     /// <summary>
     /// Vector 3D (float)
     /// </summary>
@@ -138,12 +132,7 @@ namespace Tools
         /// <returns>Clamped value</returns>
         public static int Clamp(int value, int min = 0, int max = 100)
         {
-            if (value < min)
-                return min;
-            else if (value > max)
-                return max;
-            else
-                return value;
+            return value < min ? min : value > max ? max : value;
         }
 
         /// <summary>
@@ -155,12 +144,7 @@ namespace Tools
         /// <returns>Clamped value</returns>
         public static float Clamp(float value, float min = 0, float max = 100)
         {
-            if (value < min)
-                return min;
-            else if (value > max)
-                return max;
-            else
-                return value;
+            return value < min ? min : value > max ? max : value;
         }
 
         /// <summary>
@@ -172,12 +156,7 @@ namespace Tools
         /// <returns>Clamped value</returns>
         public static double Clamp(double value, double min = 0, double max = 100)
         {
-            if (value < min)
-                return min;
-            else if (value > max)
-                return max;
-            else
-                return value;
+            return value < min ? min : value > max ? max : value;
         }
 
         /// <summary>
@@ -189,12 +168,7 @@ namespace Tools
         /// <returns>Clamped value</returns>
         public static long Clamp(long value, long min = 0, long max = 100)
         {
-            if (value < min)
-                return min;
-            else if (value > max)
-                return max;
-            else
-                return value;
+            return value < min ? min : value > max ? max : value;
         }
 
         /// <summary>
@@ -210,7 +184,7 @@ namespace Tools
             double amplitude = 0.25 * short.MaxValue;
             for (int n = 0; n < buffer.Length; n++)
             {
-                buffer[n] = (short)(amplitude * System.Math.Sin((2 * System.Math.PI * n * frequency) / rate));
+                buffer[n] = (short)(amplitude * System.Math.Sin(2 * System.Math.PI * n * frequency / rate));
             }
             return buffer;
         }

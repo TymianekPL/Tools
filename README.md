@@ -2,12 +2,12 @@
 
 Features:
 
-- Power management 
+- ✨ Power management 
 > Example:
 > ```cs
 > PowerManagement.Set(PowerAction.Shutdown);
 > ```
-- Math
+- ✨ Math
 > Vectors
 > > Vector 3D (float/int)
 > > Vector 4D (float/int)
@@ -26,7 +26,7 @@ Features:
 > > ```cs
 > > short[] sin = Math.Sin(rate: 500, bufferSize: 2000); // That will generate array with sinusoid values 
 > > ```
-- Timeout
+- ✨ Timeout
 > class to set timeout for action 
 > 
 > Constructor arguments: TimeoutTime time
@@ -46,17 +46,18 @@ Features:
 > } 
 > Console.WriteLine("That will execure withour timeout!");
 > ```
-- MessageBox
+- ✨ MessageBox
 > Show message box to user 
 > 
 > Example:
 > ```cs
 > MessageBox.Show("Hello, world", "My box", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 > ```
-- Win32API
-> There is a lot of Win32 C++ functions, just check out!
+- ✨Logger
 
 # And many more...
 
 ## For full list, go to to [Tools page](https://tymianekpl.github.io/Tools/)
 
+=======
+## This is development branch. Beta updates will be here. 

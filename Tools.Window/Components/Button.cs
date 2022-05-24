@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace Tools.Window.Components
 {
@@ -13,13 +8,13 @@ namespace Tools.Window.Components
 
         private enum GWL
         {
-            GWL_WNDPROC = (-4),
-            GWL_HINSTANCE = (-6),
-            GWL_HWNDPARENT = (-8),
-            GWL_STYLE = (-16),
-            GWL_EXSTYLE = (-20),
-            GWL_USERDATA = (-21),
-            GWL_ID = (-12)
+            GWL_WNDPROC = -4,
+            GWL_HINSTANCE = -6,
+            GWL_HWNDPARENT = -8,
+            GWL_STYLE = -16,
+            GWL_EXSTYLE = -20,
+            GWL_USERDATA = -21,
+            GWL_ID = -12
         }
 
         [DllImport("user32.dll")]
@@ -27,18 +22,18 @@ namespace Tools.Window.Components
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal static extern IntPtr CreateWindowEx(
-uint dwExStyle, 
-string lpClassName, 
-string lpWindowName, 
-uint dwStyle, 
-int x, 
-int y, 
-int nWidth, 
-int nHeight, 
-IntPtr hWndParent, 
-IntPtr hMenu, 
-IntPtr hInstance, 
-IntPtr lpParam ); 
+uint dwExStyle,
+string lpClassName,
+string lpWindowName,
+uint dwStyle,
+int x,
+int y,
+int nWidth,
+int nHeight,
+IntPtr hWndParent,
+IntPtr hMenu,
+IntPtr hInstance,
+IntPtr lpParam);
         public Button()
         {
 

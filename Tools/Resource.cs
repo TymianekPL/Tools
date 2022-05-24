@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Security.Principal;
+﻿using System.Diagnostics;
 
 namespace Tools
 {
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
     [System.Runtime.InteropServices.ComVisible(false)]
-    class Resource<Tkey, TValue>
+    internal class Resource<Tkey, TValue>
     {
         public struct Res<Key, Value>
         {
@@ -29,21 +22,20 @@ namespace Tools
                 foreach (Res<Tkey, TValue> res in list)
                 {
                     if (res.key.Equals(key))
+                    {
                         return res.value;
+                    }
                 }
                 return default;
             }
-            set
-            {
-                Add(key, value);
-            }
+            set => Add(key, value);
         }
 
         public bool Contains(Tkey key)
         {
             foreach (Res<Tkey, TValue> item in list)
             {
-                if(item.key.Equals(key))
+                if (item.key.Equals(key))
                 {
                     return true;
                 }
@@ -60,13 +52,13 @@ namespace Tools
                     int toRemove = 0;
                     foreach (Res<Tkey, TValue> item in list)
                     {
-                        if(item.key.Equals(key))
+                        if (item.key.Equals(key))
                         {
                             break;
                         }
                         toRemove++;
                     }
-                    list = list.Where((source, index) =>index != toRemove).ToArray();
+                    list = list.Where((source, index) => index != toRemove).ToArray();
                     return;
                 }
             }
@@ -78,7 +70,9 @@ namespace Tools
             foreach (Res<Tkey, TValue> res in list)
             {
                 if (res.key.Equals(key))
+                {
                     throw new ArgumentException("Key already in list!", nameof(key));
+                }
             }
             Array.Resize(ref list, list.Length + 1);
             Res<Tkey, TValue> r = new()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Tools
 {
@@ -11,7 +10,7 @@ namespace Tools
         #region DLLImport
 
         [DllImport("user32.dll")]
-        static extern int MessageBoxA(IntPtr hWnd,
+        private static extern int MessageBoxA(IntPtr hWnd,
             string lpText,
             string lpCaption,
             uint uType);

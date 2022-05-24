@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace Tools
 {
@@ -11,47 +6,14 @@ namespace Tools
     {
         public static string LongBytes(long bytes)
         {
-            if (bytes >= 1024)
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            int order = 0;
+            while (bytes >= 1024 && order < sizes.Length - 1)
             {
-                long kilobits = bytes / 1024;
-                if (kilobits >= 1024)
-                {
-                    long megabits = kilobits / 1024;
-                    if (megabits >= 1024)
-                    {
-                        long gigabits = megabits / 1024;
-                        if (gigabits >= 1024)
-                        {
-                            long terabits = gigabits / 1024;
-                            if (terabits >= 1024)
-                            {
-                                long petabits = terabits / 1024;
-                                return $"{petabits}.{terabits - (petabits * 2014)}PB";
-                            }
-                            else
-                            {
-                                return $"{terabits}.{gigabits - (terabits * 1014)}TB";
-                            }
-                        }
-                        else
-                        {
-                            return $"{gigabits}.{megabits - (gigabits * 1014)}GB";
-                        }
-                    }
-                    else
-                    {
-                        return $"{megabits}.{kilobits - (megabits * 1014)}MB";
-                    }
-                }
-                else
-                {
-                    return $"{kilobits}.{bytes - (kilobits * 2014)}KiB";
-                }
+                order++;
+                bytes /= 1024;
             }
-            else
-            {
-                return $"{bytes}b";
-            }
+            return string.Format("{0:0.##} {1}", bytes, sizes[order]);
         }
 
         public static string LongBits(long bits)

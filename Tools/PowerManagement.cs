@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tools
 {
@@ -25,7 +21,7 @@ namespace Tools
         phtok);
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        public static extern bool LookupPrivilegeValue(string host, string name,
+        public static extern bool LookupPrivilegeValue(string? host, string name,
         ref long pluid);
 
         [DllImport("advapi32.dll", ExactSpelling = true, SetLastError = true)]
@@ -75,24 +71,40 @@ namespace Tools
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
         }
+
         public static void Set(PowerAction action)
         {
             switch (action)
             {
                 case PowerAction.Hibernate:
-                
-                break;
+
+                    break;
                 case PowerAction.Shutdown:
-                DoExitWin(EWX_SHUTDOWN | EWX_FORCE);
-                break;
+                    DoExitWin(EWX_SHUTDOWN | EWX_FORCE);
+                    break;
                 case PowerAction.Restart:
-                DoExitWin(EWX_REBOOT | EWX_FORCE);
-                break;
+                    DoExitWin(EWX_REBOOT | EWX_FORCE);
+                    break;
                 case PowerAction.Logoff:
-                DoExitWin(EWX_LOGOFF | EWX_FORCE);
-                break;
+                    DoExitWin(EWX_LOGOFF | EWX_FORCE);
+                    break;
                 default:
-                throw new Exception($"{action} is not valid action!");
+                    throw new Exception($"{action} is not valid action!");
+            }
+        }
+
+        public static bool TrySet(PowerAction action, [Optional] out Win32Exception? ex)
+        {
+            try
+            {
+                Set(action);
+                ex = null;
+                return true;
+            }
+            catch (Win32Exception e)
+            {
+                ex = e;
+                return false;
             }
         }
     }

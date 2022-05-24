@@ -3,28 +3,27 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
-<html lang="">
+<html lang="en">
 
      <head>
           <meta charset="utf-8">
           <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <title>Example server</title>
+          <title>Tools library</title>
           <meta name="description" content="">
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
                integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
                crossorigin="anonymous">
-          <link rel="stylesheet" href="/assets/css/default.css">
+          <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+               integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+               crossorigin="anonymous"></script>
+          <link rel="stylesheet" href="./assets/css/default.css">
      </head>
 
      <body class="container">
           <!--[if lt IE 7]>
                <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
           <![endif]-->
-          <br />
-          <br />
-          <br />
-          <br />
           <h1>Download extensions</h1>
           <div class="controls">
                <h2>Core packages</h2>
@@ -36,8 +35,7 @@
                     </label>
                </div>
                <div class="form-check form-check-inline">
-                    <input class="form-check-input ch" checked type="checkbox" value="Tools.Net.dll"
-                         id="Tools.Net.dll">
+                    <input class="form-check-input ch" checked type="checkbox" value="Tools.Net.dll" id="Tools.Net.dll">
                     <label class="form-check-label" for="Tools.Net.dll">
                          Core - Networking
                     </label>
@@ -58,24 +56,10 @@
                </div>
                <h2>Optional components</h2>
                <div class="form-check form-check-inline">
-                    <input class="form-check-input ch" type="checkbox" value="Tools.Window.Components.Extenstion.ModernUI.dll"
-                         id="Tools.Window.Components.Extenstion.ModernUI">
-                    <label class="form-check-label" for="Tools.Window.Components.Extenstion.ModernUI">
-                         Tools.Window.Components.Extenstion.ModernUI
-                    </label>
-               </div>
-               <div class="form-check form-check-inline">
                     <input class="form-check-input ch" type="checkbox" value="Tools.Net.Extensions.WebSocket.dll"
                          id="Tools.Net.Extensions.WebSocket">
                     <label class="form-check-label" for="Tools.Net.Extensions.WebSocket">
                          Tools.Net.Extensions.WebSocket
-                    </label>
-               </div>
-               <div class="form-check form-check-inline">
-                    <input class="form-check-input ch" type="checkbox" value="Tools.Diagnostic.Extensions.Privilages.dll"
-                         id="Tools.Diagnostic.Extensions.Privilages">
-                    <label class="form-check-label" for="Tools.Diagnostic.Extensions.Privilages">
-                         Tools.Diagnostic.Extensions.Privilages
                     </label>
                </div>
                <br />
@@ -85,50 +69,85 @@
                <script>
                     var zip = new JSZip();
                     async function download() {
-                         (async() => {
-                         const checkboxes = document.getElementsByClassName("ch");
-                         console.log(checkboxes);
-                         let list = `List of downloaded libraries\n`;
-                         let files = "";
-                         for (const key in checkboxes) {
-                              if (Object.hasOwnProperty.call(checkboxes, key)) {
-                                   const box = checkboxes[key];
-                                   if (box.checked) {
-                                        list += `${box.id}\n`;
-                                        files += `${box.value}\n`;
-                                        console.log(box);
+                         (async () => {
+                              const checkboxes = document.getElementsByClassName("ch");
+                              console.log(checkboxes);
+                              let list = `List of downloaded libraries\n`;
+                              let files = "";
+                              for (const key in checkboxes) {
+                                   if (Object.hasOwnProperty.call(checkboxes, key)) {
+                                        const box = checkboxes[key];
+                                        if (box.checked) {
+                                             list += `${box.id}\n`;
+                                             files += `${box.value}\n`;
+                                             console.log(box);
+                                        }
                                    }
                               }
-                         }
-                         const lines = files.split('\n');
-                         var libs = zip.folder("libs");
-                         for (const key in lines) {
-                              if (Object.hasOwnProperty.call(lines, key)) {
-                                   const e = lines[key];
-                                   console.log(e);
-                                   list += `${e}\n`;
-                                   const blob = await fetch(e);
-                                   //.then(res => res.blob())
-                                   //.then(blob => {
+                              const lines = files.split('\n');
+                              var libs = zip.folder("libs");
+                              for (const key in lines) {
+                                   if (Object.hasOwnProperty.call(lines, key)) {
+                                        const e = lines[key];
+                                        console.log(e);
+                                        list += `${e}\n`;
+                                        const blob = await fetch(e);
+                                        //.then(res => res.blob())
+                                        //.then(blob => {
 
-                                   //});
-                                   console.log("downloaded");
-                                   const b = await blob.blob();
-                                   const r = await b.arrayBuffer();
-                                   console.log(r);
-                                   libs.file(e, r);
+                                        //});
+                                        console.log("downloaded");
+                                        const b = await blob.blob();
+                                        const r = await b.arrayBuffer();
+                                        console.log(r);
+                                        libs.file(e, r);
+                                   }
                               }
-                         }
-                         zip.file("list.txt", list);
-                         zip.generateAsync({type: "blob"})
-                              .then(function (content) {
-                                   // see FileSaver.js
-                                   console.log("Open");
-                                   saveAs(content, "libraries.zip");
-                              });
+                              zip.file("list.txt", list);
+                              zip.generateAsync({type: "blob"})
+                                   .then(function (content) {
+                                        // see FileSaver.js
+                                        console.log("Open");
+                                        saveAs(content, "libraries.zip");
+                                   });
                          })();
                     }
                </script>
+          </div>
+          <div class="footer-clean">
+               <footer>
+                    <div class="container">
+                         <div class="row justify-content-center">
+                              <div class="col-sm-4 col-md-3 item">
+                                   <h3>Core packages</h3>
+                                   <ul>
+                                        <li><a href="Tools/">Core</a></li>
+                                        <li><a href="Tools.Diagnostic/">Core - Diagnostic</a></li>
+                                        <li><a href="Tools.Net/">Core - Networking</a></li>
+                                        <li><a href="Tools.Window/">Core - Window</a></li>
+                                   </ul>
+                              </div>
+                              <div class="col-sm-4 col-md-3 item">
+                                   <h3>Optional packages</h3>
+                                   <ul>
+                                        <li><a href="Tools.Net.Extensions.WebSocket/">Tools.Net.Extensions.WebSocket</a>
+                                        </li>
+                                   </ul>
+                              </div>
+                              <div class="col-sm-4 col-md-3 item">
+                                   <h3>Community packages</h3>
+                                   <ul>
+                                        <li><a href="javascript:void(0);">Avaible soon!</a></li>
+                                   </ul>
+                              </div>
+                              <div class="col-lg-3 item social">
+                                   <a target="_blank" href="https://github.com/TymianekPL" title="TymianekPL">
+                                        <i class="fab fa-github"></i>
+                                   </a>
+                              </div>
+                         </div>
+                    </div>
+               </footer>
           </div>
 
           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
@@ -141,7 +160,7 @@
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                crossorigin="anonymous"></script>
-          <script src="/assets/scripts/main.js" async defer></script>
+          <script src="./assets/scripts/main.js" async defer></script>
      </body>
 
 </html>

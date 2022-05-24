@@ -40,7 +40,12 @@
       "ProjectGuid": "6871b5f4-6a32-407d-8f5a-51b38bf74d13",
       "DisplayName": "Tools",
       "ColorIndex": 6
+    },
+    "4bf5ded3-333d-4180-8c6f-1bebe820636f": {
+      "ProjectGuid": "4bf5ded3-333d-4180-8c6f-1bebe820636f",
+      "DisplayName": "Tools.Debug.Extensions.Runas",
+      "ColorIndex": 7
     }
   },
-  "NextColorIndex": 7
+  "NextColorIndex": 8
 }

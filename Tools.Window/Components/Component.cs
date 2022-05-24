@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace Tools.Window.Components
 {
@@ -64,7 +59,9 @@ namespace Tools.Window.Components
             foreach (Component res in list)
             {
                 if (res.Equals(key))
+                {
                     throw new ArgumentException("Key already in list!", nameof(key));
+                }
             }
             Array.Resize(ref list, list.Length + 1);
             list[^1] = key;
@@ -72,14 +69,8 @@ namespace Tools.Window.Components
 
         public Component this[int key]
         {
-            get
-            {
-                return list[key];
-            }
-            set
-            {
-                list[key] = value;
-            }
+            get => list[key];
+            set => list[key] = value;
         }
 
         public static ComponentCollection operator +(ComponentCollection a, Component b)
@@ -94,7 +85,7 @@ namespace Tools.Window.Components
 
         // Enumerators are positioned before the first element
         // until the first MoveNext() call.
-        int position = -1;
+        private int position = -1;
 
         public ComponentCollectionEnum(Component[] list)
         {
@@ -104,7 +95,7 @@ namespace Tools.Window.Components
         public bool MoveNext()
         {
             position++;
-            return (position < list.Length);
+            return position < list.Length;
         }
 
         public void Reset()
@@ -112,13 +103,7 @@ namespace Tools.Window.Components
             position = -1;
         }
 
-        object IEnumerator.Current
-        {
-            get
-            {
-                return Current;
-            }
-        }
+        object IEnumerator.Current => Current;
 
         public Component Current
         {
@@ -136,7 +121,7 @@ namespace Tools.Window.Components
         }
     }
 
-    public abstract class Component : IComponent 
+    public abstract class Component : IComponent
     {
         public ComponentCollection components = new();
 
