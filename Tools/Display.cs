@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 
 namespace Tools
@@ -17,7 +16,9 @@ namespace Tools
         public bool Rotate(uint DisplayNumber, Orientations Orientation)
         {
             if (DisplayNumber == 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(DisplayNumber), DisplayNumber, "First display is 1.");
+            }
 
             bool result = false;
             DISPLAY_DEVICE d = new();
@@ -25,16 +26,16 @@ namespace Tools
             d.cb = Marshal.SizeOf(d);
 
             if (!NativeMethods.EnumDisplayDevices(null, DisplayNumber - 1, ref d, 0))
+            {
                 throw new ArgumentOutOfRangeException(nameof(DisplayNumber), DisplayNumber, "Number is greater than connected displays.");
+            }
 
             if (0 != NativeMethods.EnumDisplaySettings(
                 d.DeviceName, NativeMethods.ENUM_CURRENT_SETTINGS, ref dm))
             {
                 if ((dm.dmDisplayOrientation + (int)Orientation) % 2 == 1) // Need to swap height and width?
                 {
-                    int temp = dm.dmPelsHeight;
-                    dm.dmPelsHeight = dm.dmPelsWidth;
-                    dm.dmPelsWidth = temp;
+                    (dm.dmPelsWidth, dm.dmPelsHeight) = (dm.dmPelsHeight, dm.dmPelsWidth);
                 }
 
                 switch (Orientation)
@@ -72,7 +73,7 @@ namespace Tools
                 uint i = 0;
                 while (++i <= 64)
                 {
-                    Rotate(i, Orientations.DEGREES_CW_0);
+                    _ = Rotate(i, Orientations.DEGREES_CW_0);
                 }
             }
             catch (ArgumentOutOfRangeException)
@@ -82,6 +83,7 @@ namespace Tools
 
         }
         #region NativeMethods
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA2101:Specify marshaling for P/Invoke string arguments", Justification = "<Pending>")]
         internal class NativeMethods
         {
             [DllImport("user32.dll")]
@@ -91,7 +93,7 @@ namespace Tools
 
             [DllImport("user32.dll")]
             internal static extern bool EnumDisplayDevices(
-                string lpDevice, uint iDevNum, ref DISPLAY_DEVICE lpDisplayDevice,
+                string? lpDevice, uint iDevNum, ref DISPLAY_DEVICE lpDisplayDevice,
                 uint dwFlags);
 
             [DllImport("user32.dll", CharSet = CharSet.Ansi)]
@@ -122,39 +124,39 @@ namespace Tools
             [System.Runtime.InteropServices.FieldOffset(0)]
             public string dmDeviceName;
             [System.Runtime.InteropServices.FieldOffset(32)]
-            public Int16 dmSpecVersion;
+            public short dmSpecVersion;
             [System.Runtime.InteropServices.FieldOffset(34)]
-            public Int16 dmDriverVersion;
+            public short dmDriverVersion;
             [System.Runtime.InteropServices.FieldOffset(36)]
-            public Int16 dmSize;
+            public short dmSize;
             [System.Runtime.InteropServices.FieldOffset(38)]
-            public Int16 dmDriverExtra;
+            public short dmDriverExtra;
             [System.Runtime.InteropServices.FieldOffset(40)]
             public DM dmFields;
 
             [System.Runtime.InteropServices.FieldOffset(44)]
-            readonly Int16 dmOrientation;
+            private readonly short dmOrientation;
             [System.Runtime.InteropServices.FieldOffset(46)]
-            readonly Int16 dmPaperSize;
+            private readonly short dmPaperSize;
             [System.Runtime.InteropServices.FieldOffset(48)]
-            readonly Int16 dmPaperLength;
+            private readonly short dmPaperLength;
             [System.Runtime.InteropServices.FieldOffset(50)]
-            readonly Int16 dmPaperWidth;
+            private readonly short dmPaperWidth;
             [System.Runtime.InteropServices.FieldOffset(52)]
-            readonly Int16 dmScale;
+            private readonly short dmScale;
             [System.Runtime.InteropServices.FieldOffset(54)]
-            readonly Int16 dmCopies;
+            private readonly short dmCopies;
             [System.Runtime.InteropServices.FieldOffset(56)]
-            readonly Int16 dmDefaultSource;
+            private readonly short dmDefaultSource;
             [System.Runtime.InteropServices.FieldOffset(58)]
-            readonly Int16 dmPrintQuality;
+            private readonly short dmPrintQuality;
 
             [System.Runtime.InteropServices.FieldOffset(44)]
             public POINTL dmPosition;
             [System.Runtime.InteropServices.FieldOffset(52)]
-            public Int32 dmDisplayOrientation;
+            public int dmDisplayOrientation;
             [System.Runtime.InteropServices.FieldOffset(56)]
-            public Int32 dmDisplayFixedOutput;
+            public int dmDisplayFixedOutput;
 
             [System.Runtime.InteropServices.FieldOffset(60)]
             public short dmColor;
@@ -170,19 +172,19 @@ namespace Tools
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHFORMNAME)]
             public string dmFormName;
             [System.Runtime.InteropServices.FieldOffset(102)]
-            public Int16 dmLogPixels;
+            public short dmLogPixels;
             [System.Runtime.InteropServices.FieldOffset(104)]
-            public Int32 dmBitsPerPel;
+            public int dmBitsPerPel;
             [System.Runtime.InteropServices.FieldOffset(108)]
-            public Int32 dmPelsWidth;
+            public int dmPelsWidth;
             [System.Runtime.InteropServices.FieldOffset(112)]
-            public Int32 dmPelsHeight;
+            public int dmPelsHeight;
             [System.Runtime.InteropServices.FieldOffset(116)]
-            public Int32 dmDisplayFlags;
+            public int dmDisplayFlags;
             [System.Runtime.InteropServices.FieldOffset(116)]
-            public Int32 dmNup;
+            public int dmNup;
             [System.Runtime.InteropServices.FieldOffset(120)]
-            public Int32 dmDisplayFrequency;
+            public int dmDisplayFrequency;
         }
 
         #endregion
@@ -208,8 +210,8 @@ namespace Tools
         [StructLayout(LayoutKind.Sequential)]
         internal struct POINTL
         {
-            readonly long x;
-            readonly long y;
+            private readonly long x;
+            private readonly long y;
         }
 
         internal enum DISP_CHANGE : int
@@ -329,42 +331,42 @@ namespace Tools
 
             // After the 32-bytes array
             [MarshalAs(UnmanagedType.U2)]
-            public UInt16 dmSpecVersion;
+            public ushort dmSpecVersion;
 
             [MarshalAs(UnmanagedType.U2)]
-            public UInt16 dmDriverVersion;
+            public ushort dmDriverVersion;
 
             [MarshalAs(UnmanagedType.U2)]
-            public UInt16 dmSize;
+            public ushort dmSize;
 
             [MarshalAs(UnmanagedType.U2)]
-            public UInt16 dmDriverExtra;
+            public ushort dmDriverExtra;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmFields;
+            public uint dmFields;
 
             public Pointl dmPosition;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmDisplayOrientation;
+            public uint dmDisplayOrientation;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmDisplayFixedOutput;
+            public uint dmDisplayFixedOutput;
 
             [MarshalAs(UnmanagedType.I2)]
-            public Int16 dmColor;
+            public short dmColor;
 
             [MarshalAs(UnmanagedType.I2)]
-            public Int16 dmDuplex;
+            public short dmDuplex;
 
             [MarshalAs(UnmanagedType.I2)]
-            public Int16 dmYResolution;
+            public short dmYResolution;
 
             [MarshalAs(UnmanagedType.I2)]
-            public Int16 dmTTOption;
+            public short dmTTOption;
 
             [MarshalAs(UnmanagedType.I2)]
-            public Int16 dmCollate;
+            public short dmCollate;
 
             // CCHDEVICENAME = 32 = 0x50
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
@@ -375,46 +377,46 @@ namespace Tools
             //public Byte[] dmFormName;
 
             [MarshalAs(UnmanagedType.U2)]
-            public UInt16 dmLogPixels;
+            public ushort dmLogPixels;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmBitsPerPel;
+            public uint dmBitsPerPel;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmPelsWidth;
+            public uint dmPelsWidth;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmPelsHeight;
+            public uint dmPelsHeight;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmDisplayFlags;
+            public uint dmDisplayFlags;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmDisplayFrequency;
+            public uint dmDisplayFrequency;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmICMMethod;
+            public uint dmICMMethod;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmICMIntent;
+            public uint dmICMIntent;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmMediaType;
+            public uint dmMediaType;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmDitherType;
+            public uint dmDitherType;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmReserved1;
+            public uint dmReserved1;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmReserved2;
+            public uint dmReserved2;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmPanningWidth;
+            public uint dmPanningWidth;
 
             [MarshalAs(UnmanagedType.U4)]
-            public UInt32 dmPanningHeight;
+            public uint dmPanningHeight;
         }
         #endregion
     }
@@ -439,8 +441,8 @@ namespace Tools
             #region DllImport
             [DllImport("User32.dll")]
             [return: MarshalAs(UnmanagedType.Bool)]
-            private static extern Boolean EnumDisplaySettings(
-                [param: MarshalAs(UnmanagedType.LPTStr)] string lpszDeviceName,
+            private static extern bool EnumDisplaySettings(
+                [param: MarshalAs(UnmanagedType.LPWStr)] string? lpszDeviceName,
                 [param: MarshalAs(UnmanagedType.U4)] int iModeNum,
                 [In, Out] ref Devmode lpDevMode);
 
@@ -461,27 +463,33 @@ namespace Tools
             /// <returns>
             public bool IsDisplayModeSupported(int width, int height, out string supportedModes)
             {
-                var mode = new Devmode();
+                Devmode mode = new();
                 mode.dmSize = (ushort)Marshal.SizeOf(mode);
 
-                var modeIndex = 0; // 0 = The first mode
+                int modeIndex = 0; // 0 = The first mode
                 supportedModes = string.Empty;
-                var previousSupportedMode = string.Empty;
+                string? previousSupportedMode = string.Empty;
 
                 while (EnumDisplaySettings(null,
                     modeIndex,
                     ref mode)) // Mode found
                 {
                     if (mode.dmPelsWidth == (uint)width && mode.dmPelsHeight == (uint)height)
+                    {
                         return true;
+                    }
 
-                    var newSupportedMode = mode.dmPelsWidth + "x" + mode.dmPelsHeight;
+                    string? newSupportedMode = mode.dmPelsWidth + "x" + mode.dmPelsHeight;
                     if (newSupportedMode != previousSupportedMode)
                     {
                         if (supportedModes == string.Empty)
+                        {
                             supportedModes += newSupportedMode;
+                        }
                         else
+                        {
                             supportedModes += ", " + newSupportedMode;
+                        }
 
                         previousSupportedMode = newSupportedMode;
                     }
@@ -506,20 +514,20 @@ namespace Tools
 
                 // Retrieving current settings
                 // to edit them
-                EnumDisplaySettings(null,
+                _ = EnumDisplaySettings(null,
                     EnumCurrentSettings,
                     ref _oldDevmode);
 
                 // Making a copy of the current settings
                 // to allow reseting to the original mode
-                var newMode = _oldDevmode;
+                Devmode newMode = _oldDevmode;
 
                 // Changing the settings
                 newMode.dmPelsWidth = (uint)width;
                 newMode.dmPelsHeight = (uint)height;
 
                 // Capturing the operation result, 1 = update registry
-                var result =
+                int result =
                     ChangeDisplaySettings(ref newMode, 1);
 
                 switch (result)
@@ -528,15 +536,15 @@ namespace Tools
                         return true;
 
                     case DispChangeBadmode:
-                        MessageBox.Show("Mode not supported.", "DISPLAY ERROR", MessageBoxButtons.Ok, MessageBoxIcon.Error);
+                        _ = MessageBox.Show("Mode not supported.", "DISPLAY ERROR", MessageBoxButtons.Ok, MessageBoxIcon.Error);
                         return false;
 
                     case DispChangeRestart:
-                        MessageBox.Show("Restart required.", "DISPLAY ERROR", MessageBoxButtons.Ok, MessageBoxIcon.Error);
+                        _ = MessageBox.Show("Restart required.", "DISPLAY ERROR", MessageBoxButtons.Ok, MessageBoxIcon.Error);
                         return false;
 
                     default:
-                        MessageBox.Show("Failed. Error code = " + result, "DISPLAY ERROR", MessageBoxButtons.Ok, MessageBoxIcon.Error);
+                        _ = MessageBox.Show("Failed. Error code = " + result, "DISPLAY ERROR", MessageBoxButtons.Ok, MessageBoxIcon.Error);
                         return false;
                 }
             }
@@ -548,7 +556,7 @@ namespace Tools
             /// </summary>
             public void RestoreDisplaySettings()
             {
-                ChangeDisplaySettings(ref _oldDevmode, 1);
+                _ = ChangeDisplaySettings(ref _oldDevmode, 1);
             }
             #endregion
         }

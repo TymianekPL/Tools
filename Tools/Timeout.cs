@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tools
+﻿namespace Tools
 {
     public class Timeout
     {
@@ -21,9 +15,9 @@ namespace Tools
             int seconds = (time.Minutes + minutes) * 60;
             int ms = (time.Seconds + seconds) * 1000;
             ms += time.Milliseconds;
-            Task.Run(() =>
+            _ = Task.Run(() =>
             {
-                WinAPINatives.SleepA(ms);
+                Thread.Sleep(ms);
                 action.Invoke();
             });
         }
@@ -49,8 +43,8 @@ namespace Tools
 
         public static TimeSpan operator +(TimeSpan span, TimeoutTime time)
         {
-            TimeSpan _span = new TimeSpan(days: time.Days, hours: time.Hours, minutes: time.Minutes, seconds: time.Seconds, milliseconds: time.Milliseconds);
-            span.Add(_span);
+            TimeSpan _span = new(days: time.Days, hours: time.Hours, minutes: time.Minutes, seconds: time.Seconds, milliseconds: time.Milliseconds);
+            _ = span.Add(_span);
             return span;
         }
 

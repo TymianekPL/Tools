@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Tools.Window
 {
@@ -7,11 +6,11 @@ namespace Tools.Window
     [ComVisible(false)]
     public class HandlerArgs
     {
-        public static readonly HandlerArgs Empty = new HandlerArgs();
+        public static readonly HandlerArgs Empty = new();
 
         public HandlerArgs()
         {
-            
+
         }
     }
 }

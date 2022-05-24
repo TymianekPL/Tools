@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace Tools
 {
@@ -23,7 +19,7 @@ namespace Tools
         internal static extern bool SetSuspendState(int a, int b, int c);
         public static void Hibernate()
         {
-            SetSuspendState(0, 1, 0);
+            _ = SetSuspendState(0, 1, 0);
         }
         [DllImport("user32.dll")]
         internal static extern void Sleep(int ms);

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Runtime.InteropServices;
 using System.Text;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Threading;
 using Tools.Window.Components;
 
 namespace Tools.Window
@@ -42,7 +36,7 @@ namespace Tools.Window
         {
             get
             {
-                if(_instance == null)
+                if (_instance == null)
                 {
                     _instance = this;
                 }
@@ -50,11 +44,11 @@ namespace Tools.Window
             }
             set
             {
-                if(value != null)
+                if (value != null)
                 {
                     throw new ArgumentException("New value must be NULL", nameof(value));
                 }
-                if(_instance == null)
+                if (_instance == null)
                 {
                     return;
                 }
@@ -70,13 +64,13 @@ namespace Tools.Window
         public string Title { get; set; } = "My app";
         public override string Name { get; internal set; } = nameof(Window);
 
-        delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        private delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
         [System.Runtime.InteropServices.StructLayout(
             System.Runtime.InteropServices.LayoutKind.Sequential,
            CharSet = System.Runtime.InteropServices.CharSet.Unicode
         )]
-        struct WNDCLASS
+        private struct WNDCLASS
         {
             public uint style;
             public IntPtr lpfnWndProc;
@@ -93,23 +87,23 @@ namespace Tools.Window
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern System.UInt16 RegisterClassW(
+        private static extern ushort RegisterClassW(
             [System.Runtime.InteropServices.In] ref WNDCLASS lpWndClass
         );
         [DllImport("WinAPI.dll")]
         internal static extern void Create();
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr CreateWindowExW(
-           UInt32 dwExStyle,
+        private static extern IntPtr CreateWindowExW(
+           uint dwExStyle,
            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]
        string lpClassName,
            [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)]
        string lpWindowName,
-           UInt32 dwStyle,
-           Int32 x,
-           Int32 y,
-           Int32 nWidth,
-           Int32 nHeight,
+           uint dwStyle,
+           int x,
+           int y,
+           int nWidth,
+           int nHeight,
            IntPtr hWndParent,
            IntPtr hMenu,
            IntPtr hInstance,
@@ -117,12 +111,12 @@ namespace Tools.Window
         );
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern System.IntPtr DefWindowProcW(
+        private static extern System.IntPtr DefWindowProcW(
             IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam
         );
 
         [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
-        static extern bool DestroyWindow(
+        private static extern bool DestroyWindow(
             IntPtr hWnd
         );
         private const int ERROR_CLASS_ALREADY_EXISTS = 1410;
@@ -153,12 +147,12 @@ namespace Tools.Window
                 if (m_hwnd != IntPtr.Zero)
                 {
 
-                    DestroyWindow(m_hwnd);
+                    _ = DestroyWindow(m_hwnd);
                     m_hwnd = IntPtr.Zero;
                 }
                 else
                 {
-                    MessageBox.Show("NULL");
+                    _ = MessageBox.Show("NULL");
                 }
 
             }
@@ -172,8 +166,15 @@ namespace Tools.Window
         public IntPtr CustomWindow(string class_name)
         {
 
-            if (class_name == null) throw new Exception("class_name is null");
-            if (class_name == String.Empty) throw new Exception("class_name is empty");
+            if (class_name == null)
+            {
+                throw new Exception("class_name is null");
+            }
+
+            if (class_name == string.Empty)
+            {
+                throw new Exception("class_name is empty");
+            }
 
             m_wnd_proc_delegate = CustomWndProc;
 
@@ -184,7 +185,7 @@ namespace Tools.Window
                 lpfnWndProc = Marshal.GetFunctionPointerForDelegate(m_wnd_proc_delegate)
             };
 
-            UInt16 class_atom = RegisterClassW(ref wind_class);
+            ushort class_atom = RegisterClassW(ref wind_class);
 
             int last_error = Marshal.GetLastWin32Error();
 
@@ -215,13 +216,13 @@ namespace Tools.Window
 
         private enum GWL
         {
-            GWL_WNDPROC = (-4),
-            GWL_HINSTANCE = (-6),
-            GWL_HWNDPARENT = (-8),
-            GWL_STYLE = (-16),
-            GWL_EXSTYLE = (-20),
-            GWL_USERDATA = (-21),
-            GWL_ID = (-12)
+            GWL_WNDPROC = -4,
+            GWL_HINSTANCE = -6,
+            GWL_HWNDPARENT = -8,
+            GWL_STYLE = -16,
+            GWL_EXSTYLE = -20,
+            GWL_USERDATA = -21,
+            GWL_ID = -12
         }
 
         [DllImport("user32.dll")]
@@ -238,10 +239,10 @@ namespace Tools.Window
 
         public void Close()
         {
-            if(!DestroyWindow(m_hwnd))
+            if (!DestroyWindow(m_hwnd))
             {
                 System.ComponentModel.Win32Exception ex = new(Marshal.GetLastWin32Error());
-                MessageBox.Show($"An error occured. Parameters: {ex.Message}, 0x{ex.NativeErrorCode}", "Critical error", MessageBoxButtons.Ok, MessageBoxIcon.Error);
+                _ = MessageBox.Show($"An error occured. Parameters: {ex.Message}, 0x{ex.NativeErrorCode}", "Critical error", MessageBoxButtons.Ok, MessageBoxIcon.Error);
             }
         }
 
@@ -285,19 +286,19 @@ namespace Tools.Window
         public IWindow.WindowSize Size { get; set; }
 
         [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Unicode)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll", EntryPoint = "SendMessage", SetLastError = true)]
-        static extern IntPtr SendMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll")]
         internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [DllImport("user32.dll")]
-        static extern bool UpdateWindow(IntPtr hWnd);
+        private static extern bool UpdateWindow(IntPtr hWnd);
         [DllImport("user32.dll")]
-        static extern bool TranslateMessage([In] ref MSG lpMsg);
+        private static extern bool TranslateMessage([In] ref MSG lpMsg);
         [DllImport("user32.dll")]
-        static extern IntPtr DispatchMessage([In] ref MSG lpmsg);
+        private static extern IntPtr DispatchMessage([In] ref MSG lpmsg);
         [DllImport("user32.dll")]
-        static extern int GetMessage(out MSG lpMsg, IntPtr hWnd, uint wMsgFilterMin,
+        private static extern int GetMessage(out MSG lpMsg, IntPtr hWnd, uint wMsgFilterMin,
    uint wMsgFilterMax);
 
         public struct MSG
@@ -318,8 +319,8 @@ namespace Tools.Window
 
             public POINT(int x, int y)
             {
-                this.X = x;
-                this.Y = y;
+                X = x;
+                Y = y;
             }
 
             public static implicit operator System.Drawing.Point(POINT p)
@@ -359,7 +360,7 @@ namespace Tools.Window
             foreach (Component component in components)
             {
                 IntPtr cmp = component.Implement(window);
-                SendMessage(cmp, 0x000C, 0, "Command link");
+                _ = SendMessage(cmp, 0x000C, 0, "Command link");
             }
         }
 
@@ -376,17 +377,20 @@ namespace Tools.Window
         public void Show()
         {
             if (CLASS_NAME == null)
+            {
                 CLASS_NAME = $"{Title}Class";
+            }
+
             Start?.Invoke(this, new StartHandlerArgs());
             window = CustomWindow(CLASS_NAME);
-            ShowWindow(window, (int)Style);
+            _ = ShowWindow(window, (int)Style);
             Showed?.Invoke(this, new ShowedHandlerArgs());
-            UpdateWindow(window);
+            _ = UpdateWindow(window);
             MSG msg = new();
             while (GetMessage(out msg, window, 0, 0) != -1)
             {
-                TranslateMessage(ref msg);
-                DispatchMessage(ref msg);
+                _ = TranslateMessage(ref msg);
+                _ = DispatchMessage(ref msg);
             }
         }
     }
